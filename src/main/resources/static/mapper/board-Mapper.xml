@@ -8,7 +8,7 @@
 	</select>
 	
 	<select id="detail" parameterType="Integer" resultType="BoardDTO">
-		select bcontent, uuid from boardview where bno=#{bno}
+		select bcontent, uuid, bip from boardview where bno=#{bno}
 	</select>
 	
 	<insert id="write" parameterType="BoardDTO">

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +38,10 @@ public class BoardController {
 		BoardDTO dto = boardService.detail(bno);
 		
 		JSONObject json = new JSONObject();
-		JSONObject e = new JSONObject();
 		
-		e.put("content", dto.getBcontent());
-		e.put("uuid", dto.getUuid());
-		
-		json.put("result", e);
+		json.put("content", dto.getBcontent());
+		json.put("uuid", dto.getUuid());
+		json.put("ip", dto.getBip());
 		
 		
 		System.out.println(json.toString());
@@ -56,17 +55,19 @@ public class BoardController {
 	}
 	
 	@PostMapping("/write")
-	public String write(HttpServletRequest request) {
-		System.out.println(request.getParameter("title"));
-		System.out.println(request.getParameter("content"));
+	public String write(HttpServletRequest request, HttpSession session) {
+		//로그인한 사람만 들어올수 있습니다.
+		//System.out.println(request.getParameter("title"));
+		//System.out.println(request.getParameter("content"));
+		if(session.getAttribute("mid") != null) {
 		BoardDTO dto = new BoardDTO();
 		dto.setBtitle(request.getParameter("title"));
 		dto.setBcontent(request.getParameter("content"));
-		dto.setM_id("superman"); //임시로 멤버스에 있는 아이디를 넣었습니다.
+		dto.setM_id(String.valueOf(session.getAttribute("mid"))); //임시로 멤버스에 있는 아이디를 넣었습니다.
 		dto.setBip("0.0.0.0");
 		int result = boardService.write(dto);
-		System.out.println(result);
-		
+		//System.out.println(result);
+		}
 		return "redirect:/board";
 	}
 	

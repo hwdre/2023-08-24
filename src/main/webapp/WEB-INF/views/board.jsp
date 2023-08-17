@@ -71,11 +71,11 @@
 				success:function(data){
 					$(".modal-title").text(title);
 					name= name + '<img class="edit" src="./img/edit.png"> <img class="del" src="./img/delete.png">';
-					name += '<input type="text" class="bno" value="'+bno+'">';
-					name += '<input type="text" class="uuid" value="'+data.result.uuid+'">';
+					//name += '<input type="text" class="bno" value="'+bno+'">';
+					//name += '<input type="text" class="uuid" value="'+data.uuid+'">';
 					$(".detail-name").html(name);
 					$(".detail-date").text(date);
-					$(".detail-read").text(read);
+					$(".detail-read").text(data.ip+ " / " + read);
 					$(".detail-content").html(data.content);
 					$("#exampleModal").modal("show");
 				},
@@ -125,7 +125,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-      	<div class="detail-deail">
+      	<div class="detail-detail">
       		 <div class="detail-name">이름</div>
       		 <div class="detail-date-read">
       		 	<div class="detail-date">날짜</div>

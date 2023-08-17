@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang=ko">
 <head>
@@ -30,7 +29,14 @@
 	<!-- Masthead-->
 	<header class="masthead">
 		<div class="container">
-			<div class="masthead-subheading">Welcome To Our Studio!</div>
+			<div class="masthead-subheading">
+				<c:if test="${sessionScope.mname ne null}">
+					${sessionScope.mname }님 반갑습니다.
+				</c:if>
+				<c:if test="${sessionScope.mname eq null}">
+					로그인해주세요
+				</c:if>
+			</div>
 			<div class="masthead-heading text-uppercase">It's Nice To Meet
 				You</div>
 			<a class="btn btn-primary btn-xl text-uppercase" href="#services">Tell
