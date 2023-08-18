@@ -1,5 +1,6 @@
 package com.hsw.web.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -7,10 +8,9 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper
-public interface LoginDAO {
+public interface NoticeDAO {
 
-	public Map<String, Object> login(Map<String, String> map);
-
-	public Map<String, Object> myInfo(String id);
-
+	List<Map<String, Object>> list();
+	
+	
 }

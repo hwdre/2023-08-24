@@ -16,6 +16,11 @@ public class LoginService {
 	public Map<String, Object> login(Map<String,String> map) {
 		return loginDAO.login(map);
 	}
+
+	public Map<String, Object> myInfo(String id) {
+		
+		return loginDAO.myInfo(id);
+	}
 	
 	
 	

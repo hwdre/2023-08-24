@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="a" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,7 +23,34 @@
  <!-- Masthead-->
         <header class="masthead">
             <div class="container">
-               
+               <h1>공지사항</h1>
+               <c:choose>
+               	<c:when test="${a:length(list) gt 0 }">
+               		<table class="table table-dark table-hover table-striped">
+               		<thead>
+               		<tr class="row">
+               			<th class="col-1">번호</th>
+               			<th class="col-6">제목</th>
+               			<th class="col-2">글쓴이</th>
+               			<th class="col-2">날짜</th>
+               			<th class="col-1">읽음</th>
+               		</tr>
+               		</thead>
+               		<tbody><c:forEach items="${list }" var="row">
+               		<tr class="row detail" onclick="location.href='./mbdetail?mbno=${row.nno }'">
+               			<td class="col-1">${row.nno}</td>
+               			<td class="col-6 title">${row.ntitle}</td>
+               			<td class="col-2">${row.nname}</td>
+               			<td class="col-2">${row.ndate}</td>
+               			<td class="col-1">${row.nread}</td>
+               		</tr></c:forEach>
+               		</tbody>
+               		</table>
+               	</c:when>
+               	<c:otherwise>
+               		<h1>게시판에 글이 없습니다.</h1>
+               	</c:otherwise>
+               	</c:choose>
                
             </div>
         </header>
