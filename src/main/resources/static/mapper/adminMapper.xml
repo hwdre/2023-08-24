@@ -7,4 +7,17 @@
 		from members 
 		where m_id = #{id} and aes_decrypt(unhex(m_pw), 'sun') = #{pw}
 	</select>
+	
+	<select id="noticelist" resultType="Map">
+		select * from notice
+	</select>
+	
+	<insert id="noticeWrite" parameterType="Map">
+		insert into notice(ntitle, ncontent, m_no
+		<if test="upfile != null and upfile != ''">, norifile</if>
+		)
+		values(#{title}, #{content}, #{mno}
+		<if test="#{upfile != null and !upfile == ''}">,#{upfile}</if>
+		)
+	</insert>
 </mapper>
