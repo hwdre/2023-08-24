@@ -21,6 +21,8 @@ public interface BoardDAO {
 
 	int delete(BoardDTO dto);
 
+	BoardDTO detail2(int bno);
+
 	
 
 	

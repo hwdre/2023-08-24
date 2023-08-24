@@ -1,0 +1,25 @@
+@charset "UTF-8";
+.div-table{
+	display: table;
+	margin: 0 auto;
+	width: 900px;
+	height: auto;
+}
+.div-row{
+	display: table-row;
+	height: 30px;
+	line-height: 30px;
+}
+.div-cell{
+	display: table-cell;
+	border-bottom: 1px solid black;
+}
+.table-head{
+	background-color: gray;
+	font-weight: bold;
+	text-align: center;
+}
+.url{
+	width: 50px;
+	text-align: left;
+}

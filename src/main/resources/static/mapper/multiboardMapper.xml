@@ -1,28 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hsw.web.dao.MultiBoardDAO">
-	
+
 	<select id="list" parameterType="Integer" resultType="Map">
-		select mb_no, mb_title, mb_date, mb_read, m_id, m_name
-		from mbview where mb_board = #{board} limit 0, 10
+		select *, (select count(*) from multiboardview where mb_board = #{board}) as count
+		from (select cast(@rownum:=@rownum + 1 as unsigned) as rowNum, 
+		m.* from multiboardview m, (select @rownum:=0) as r
+		where m.mb_board = #{board} order by m.mb_no asc) mm
+		order by mm.mb_no desc limit 0, 10
 	</select>
-	
+
 	<insert id="mbWrite" parameterType="Map">
-	
-		<!-- <selectKey resultType="Integer" keyProperty="m_no" order="BEFORE">
-			select m_no from members where m_id = #{mid}
-		</selectKey> -->
-		
+
+		<!-- <selectKey resultType="Integer" keyProperty="m_no" order="BEFORE"> 
+			select m_no from members where m_id = #{mid} </selectKey> -->
+
 		insert into multiboard (mb_title, mb_content, mb_board, m_no)
-		values(#{title}, #{content}, #{board}, (select m_no from members where m_id = #{mid}))
-		
-		<selectKey resultType="Integer" keyProperty="mb_no" order="AFTER">
+		values(#{title}, #{content}, #{board}, (select m_no from members where
+		m_id = #{mid}))
+
+		<selectKey resultType="Integer" keyProperty="mb_no"
+			order="AFTER">
 			select last_insert_id()
 		</selectKey>
 	</insert>
-	
+
 	<select id="mbdetail" parameterType="Integer" resultType="Map">
-		select * from mbview where mb_no = #{mbno}
+		select
+		* from mbview where mb_no = #{mbno}
 	</select>
-	
+
+	<select id="boardList" resultType="Map">
+		select * from setupboard order
+		by b_no asc
+	</select>
+
 </mapper>

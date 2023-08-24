@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -14,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionIdListener;
 
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.SimpleEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,11 +24,17 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hsw.web.Service.AdminService;
 import com.hsw.web.util.Util;
 
@@ -56,7 +65,7 @@ public class AdminController {
 	public String adminLogin(@RequestParam Map<String, Object> map, HttpSession session) {
 		//System.out.println(map);
 		Map<String, Object> result = adminService.adminLogin(map);
-		System.out.println(result);
+		//System.out.println(result);
 		if(util.obj2Int(result.get("count")) == 1 && util.obj2Int(result.get("m_grade")) > 5) {
 			System.out.println("코딩재밌다.");
 			session.setAttribute("mid", map.get("id"));
@@ -97,12 +106,12 @@ public class AdminController {
 			HttpServletRequest rq0 = 
 					((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
 			String path = rq0.getServletContext().getRealPath("/upload");
-			System.out.println("실제 경로: " + path);
+			//System.out.println("실제 경로: " + path);
 			//mf의 정보 보기
-			System.out.println(mf.getOriginalFilename());
-			System.out.println(mf.getSize());
-			System.out.println(mf.getContentType());
-			//진짜 파일 업로드 하기 = 경로 + 저장할 파일 명칭
+//			System.out.println(mf.getOriginalFilename());
+//			System.out.println(mf.getSize());
+//			System.out.println(mf.getContentType());
+//			//진짜 파일 업로드 하기 = 경로 + 저장할 파일 명칭
 			//String타입의 경로를 file형태로 바꿔주겠습니다.
 			//File filePath = new File(path);
 			//중복이 발생할 수 있기 때문에 원래는 파일명 + 날짜 + 파일확장자를 이어붙여서 db에 집어넣습니다.
@@ -152,5 +161,55 @@ public class AdminController {
 	@GetMapping("/mail")
 	public String mail() {
 		return "admin/mail";
+	}
+	
+	@PostMapping("/mail")
+	public String main(@RequestParam Map<String, Object> map) throws EmailException {
+		//System.out.println(map);
+		//return "admin/mail";
+		util.htmlMailSender(map);
+		return "admin/mail";
+	}
+	
+	@ResponseBody
+	@PostMapping("/noticeDetail")
+	public String noticeDetail(@RequestParam("nno") int nno) {
+		System.out.println(nno);
+		//jackson 사용해 보겠습니다.
+		ObjectNode json = JsonNodeFactory.instance.objectNode();
+		//json.put("name", "황선우");
+		//String ncontent = adminService.noticeDetail(nno);
+		
+//		 Map<String, Object> maf = new HashMap<String, Object>();
+//		 maf.put("bno", 123);
+//		 maf.put("btitle", 1234);
+//		 
+//		 ObjectMapper mapper = new ObjectMapper();
+//		 try {
+//			json.put("map", mapper.writeValueAsString(maf));
+//		} catch (JsonProcessingException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		json.put("ncontent", adminService.noticeDetail(nno));
+		return json.toString();
+	}
+	
+	//noticeHide입니다.
+	@ResponseBody
+	@PostMapping("/noticeHide")
+	public String noticeHide(@RequestParam("nno") int nno) {
+		int result = adminService.noticeHide(nno);
+		ObjectNode json = JsonNodeFactory.instance.objectNode();
+		json.put("result", result);
+		return json.toString();
+	}
+	
+	@GetMapping("/multiBoard")
+	public String multiBoard(Model model) {
+		//setupboard의 내용을 가져와서 multiBoard.jsp에 찍어 주세요.
+		List<Map<String,Object>> setupBoardList = adminService.setupBoardList();
+		model.addAttribute("setupBoardList", setupBoardList);
+		return "admin/multiBoard";
 	}
 }

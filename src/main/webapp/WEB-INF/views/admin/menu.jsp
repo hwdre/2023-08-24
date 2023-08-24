@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <div class="menu">
+	<div class="menu-logo">
+	</div>
 	<div class="menu-item" onclick="url('multiBoard')">
 		<i class="xi-bars xi-2x"></i>게시판 관리
 	</div>

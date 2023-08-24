@@ -42,5 +42,10 @@ public class BoardService {
 		// TODO Auto-generated method stub
 		return boardDAO.delete(dto);
 	}
+
+	public BoardDTO detail2(int bno) {
+		// TODO Auto-generated method stub
+		return boardDAO.detail2(bno);
+	}
 	
 }

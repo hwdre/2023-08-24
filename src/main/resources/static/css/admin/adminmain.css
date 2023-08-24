@@ -21,6 +21,10 @@ body{
 	width: 200px;
 	transition: 0.2s;
 }
+.menu-logo{
+	width:50px;
+	height:200px;
+}
 .menu-item{
 	width: 195px;
 	margin: 5px;

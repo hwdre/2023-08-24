@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.json.JSONObject;
+//import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hsw.web.dto.BoardDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hsw.web.Service.BoardService;
 
 @Controller
@@ -37,7 +41,7 @@ public class BoardController {
 		//System.out.println(bno);
 		BoardDTO dto = boardService.detail(bno);
 		
-		JSONObject json = new JSONObject();
+		ObjectNode json = JsonNodeFactory.instance.objectNode();
 		
 		json.put("content", dto.getBcontent());
 		json.put("uuid", dto.getUuid());
@@ -75,5 +79,17 @@ public class BoardController {
 	public String delete(BoardDTO dto) {
 		boardService.delete(dto);
 		return "redirect:/board";
+	}
+	
+	@ResponseBody
+	@PostMapping("/detail2")
+	public String detail2(@RequestParam("bno") int bno) throws JsonProcessingException {
+		
+		BoardDTO detail = boardService.detail2(bno);
+		
+		ObjectMapper mapp = new ObjectMapper();
+		String json = mapp.writeValueAsString(detail);
+		System.out.println(json);
+		return json;
 	}
 }

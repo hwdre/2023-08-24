@@ -9,30 +9,99 @@
 <title>관리자 메인 페이지</title>
 <link rel="stylesheet"
 	href="//cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css">
+<script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="../css/admin/adminmain.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 <style>
 .notice-write-form{
-	width: 90%;
+	width: 95%;
 	height: auto;
-	margin: 10px;
+	margin : 10px;
 	padding: 20px;
 	box-sizing: border-box;
 }
 .notice-write-form input{
 	height: 30px;
-	width: 100%;
+	width: 100%;	
 }
-.notice-write-form textarea{
+.notice-write-form textarea {
 	width: 100%;
 	height: 300px;
 	margin: 5px 0px;
 }
-.notice-write-form button{
+.notice-write-form button {
 	width: 100px;
 	height: 50px;
 }
+table{
+	width: 800px;
+	text-align: center;
+	border-collapse: collapse;
+	float: left;
+}
+tr{
+	border-bottom: 1px solid silver;
+}
+tr:hover{
+	background-color: silver;
+}
+.title{
+	text-align: left;
+	width: 40%;
+}
+.content-view{
+	width: calc(100% - 800px);
+	height: 400px;
+	background-image: url('../img/rainbow.jpg');
+	float: right;
+}
 </style>
+<script>
+$(function(){
+	//alert("!"); 최초에 연결이 되었는지 확인하는 용도입니다.
+	$(".ntitle").click(function(){
+		//alert("!"); //됩니다. 혹시 연결이 끊겼나 의심되면 이거 주석 해제하고 밑에 주석처리한 후 실행해주세요.
+		//alert($(this).text()); 클릭한 제목이 떠야 합니다.
+		let nno = $(this).siblings(".nno").text();
+		$.ajax({
+			url: "./noticeDetail",
+			type: "post",
+			data: {nno: nno},
+			dataType: "json",
+			success:function(data){
+				$(".notice-content").html(data.ncontent);
+			},
+			error:function(data){
+				alert("오류발생!!! 오류발생!!! 코드 점검해라 멍청아!!!!!!");
+			}
+		});
+	});
+});
+$(function(){
+	$(document).on("click", ".xi-eye, .xi-eye-off", function(){
+		let nno = $(this).parent().siblings(".nno").text();
+		let nnoTD = $(this).parent();
+		//alert(nno);
+		$.ajax({
+			url: "./noticeHide",
+			type: "post",
+			data: {nno: nno},
+			dataType: "json",
+			success:function(data){
+				//변경되었다면 모양 바꾸기
+				if(nnoTD.html().indexOf("-off") != -1){
+         			nnoTD.html('<i class="xi-eye"></i>');
+         		} else {
+         			nnoTD.html('<i class="xi-eye-off"></i>');
+         		}
+			},
+			error:function(data){
+				alert("오류발생!!! 오류발생!!! 코드 점검해라 멍청아!!!!!!!" + data.result);
+			}
+		})
+	});
+});
+</script>
 </head>
 <body>
 	<div class="container">
@@ -52,8 +121,8 @@
 					</tr>
 					<c:forEach items="${noticelist }" var="row">
 						<tr>
-							<td>${row.nno }</td>
-							<td>${row.ntitle }</td>
+							<td class="nno">${row.nno }</td>
+							<td class="ntitle">${row.ntitle }</td>
 							<td>${row.ndate }</td>
 							<td>${row.m_no }</td>
 							<td><c:choose>
@@ -76,6 +145,10 @@
 						</tr>
 					</c:forEach>
 				</table>
+				<div class="content-view">
+					<div class="notice-content"></div>
+					<div class="pic-or-fi"></div>
+				</div>
 				<div class="notice-write-form">
 					<form action="./noticeWrite" method="post" enctype="multipart/form-data"> 
 					<!-- enctype="multipart/form-data" 요로코롬 쓰며는 파일 올릴 수 있습니다.-->

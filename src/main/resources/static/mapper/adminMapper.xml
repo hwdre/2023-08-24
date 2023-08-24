@@ -20,4 +20,16 @@
 		<if test="#{upfile != null and !upfile == ''}">,#{upfile}, #{realFile}</if>
 		)
 	</insert>
+	
+	<select id="noticeDetail" parameterType="Integer" resultType ="String">
+		select ncontent from notice where nno=#{nno}
+	</select>
+	
+	<update id="noticeHide" parameterType="Integer">
+		update notice set ndel = if(ndel = 1, 0, 1) where nno = #{nno}
+	</update>
+	
+	<select id="setupBoardList" resultType="Map">
+		select * from setupboard order by b_no asc
+	</select>
 </mapper>
