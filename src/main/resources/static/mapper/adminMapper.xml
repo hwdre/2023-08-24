@@ -19,7 +19,7 @@
 		values(#{title}, #{content}, #{mno}
 		<if test="#{upfile != null and !upfile == ''}">,#{upfile}, #{realFile}</if>
 		)
-	</insert>
+	</insert>	
 	
 	<select id="noticeDetail" parameterType="Integer" resultType ="String">
 		select ncontent from notice where nno=#{nno}
@@ -32,4 +32,17 @@
 	<select id="setupBoardList" resultType="Map">
 		select * from setupboard order by b_no asc
 	</select>
+	
+	<insert id="multiboard" parameterType="Map">
+		insert into setupboard(mb_cate, b_catename, b_url, b_comment)
+		values(#{cateNum}, #{name}, CONCAT('./multiboard?board=',#{cateNum}), #{comment})
+	</insert>
+	
+	<select id="memberList" resultType="Map">
+		select * from members
+	</select>
+	
+	<update id="gradeChange" parameterType="Map">
+		update members set m_grade = #{grade} where m_no = #{mno}
+	</update>
 </mapper>

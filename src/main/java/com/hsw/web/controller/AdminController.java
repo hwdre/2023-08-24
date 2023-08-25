@@ -5,9 +5,13 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -30,6 +34,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -211,5 +216,30 @@ public class AdminController {
 		List<Map<String,Object>> setupBoardList = adminService.setupBoardList();
 		model.addAttribute("setupBoardList", setupBoardList);
 		return "admin/multiBoard";
+	}
+	
+		
+	@PostMapping("/multiBoard")
+	public String multiboard(@RequestParam Map<String, Object> map) {
+		int result = adminService.multiboard(map);
+		//System.out.println("result: " + result);
+		return "redirect:/admin/multiBoard";
+	}
+	
+	@GetMapping("/members")
+	public String memberList(Model model) {
+		List<Map<String, Object>> memberList = adminService.memberList();
+		model.addAttribute("memberList", memberList);
+		//System.out.println(memberList);
+		return "admin/members";
+	}
+	
+	@GetMapping("/gradeChange")
+	public String gradeChange(@RequestParam Map<String,Object> map) {
+		System.out.println(map);
+		int result = adminService.gradeChange(map);
+		System.out.println(result);
+		//System.out.println(map);
+		return "redirect:/admin/members";
 	}
 }

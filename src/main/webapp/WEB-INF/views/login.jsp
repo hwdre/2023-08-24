@@ -64,6 +64,81 @@
 			}
 		}
 	</script>
+<script type="text/javascript">
+$(function(){
+		//쿠키 값 가져오기
+		let userID = getCookie("userID"); //아이디가 담깁니다.
+		let setCookiey = getCookie("setCookie"); //Y가 담깁니다.
+		
+		//쿠키 값 검사하기 -> 만약 쿠키가 있다면 해당 쿠키에서 아이디를 가져와서 아이디칸에 붙여넣기
+		if(setCookiey == 'Y'){
+			$("#saveID").prop("checked", true);
+			$("#id").val(userID);
+		} else {
+			$("#saveID").prop("checked", false);
+		}
+		
+	$("#login").click(function(){
+		//아이디 패스워드 검사하기
+		let id = $("#id").val();
+		let pw = $("#pw").val();
+		
+		if(id == '' || id.length < 3) {
+			alert("올바른 아이디를 입력하세요.");
+			$("#id").focus();
+			return false;
+		}
+		if(pw == '' || pw.length < 8) {
+			alert("올바른 비밀번호를 입력하세요.");
+			$("#pw").focus();
+			return false;
+		}
+		
+		//alert("!");
+		if($("#saveID").is(":checked")){
+			//alert("체크되어 있습니다.");
+			//setCookie("userID", 사용자가 입력한 id, 저장할 기); 라는 함수를 불러옵니다.
+			setCookie("userID", id, 7);
+			setCookie("setCookie", "Y", 7);			
+		} else {
+			//alert("체크되어 있지 않습니다.");
+			//deleteCookie();
+			deleteCookie("userID");
+			deleteCookie("setCookie");
+		}
+	});
+});
+//setCookie(), deleteCookie(), getCookie() 세가지 함수를 만들겁니다.
+function setCookie(cookieName, value, exdays){
+	let exdate = new Date();
+	exdate.setDate(exdate.getDate() + exdays);
+	let cookieValue = value + ((exdays == null) ? "" : "; expires=" + exdate.toGMTString());
+	document.cookie = cookieName+"="+cookieValue;
+	//					userID=hsw; expires=2023-08-30
+}
+//
+function deleteCookie(cookieName){
+	let expireDate = new Date();
+	expireDate.setDate(expireDate.getDate() -1);
+	document.cookie = cookieName+"="+";expires="+expireDate.toGMTString();
+}
+
+//
+function getCookie(cookieName){
+	let x, y;
+	let val = document.cookie.split(";");
+	for(let i = 0; i < val.length; i++){
+		x = val[i].substr(0, val[i].indexOf("="));
+		y = val[i].substr(val[i].indexOf("=") + 1);
+		//x = x.replace(/^\s+|\s+$/g, '');
+		x = x.trim();
+		if(x == cookieName){
+			alert(y);
+			return y;
+		}
+	}
+}
+</script>
 </head>
 <body>
 <%@ include file="menu.jsp" %>
@@ -71,7 +146,7 @@
             <div class="container">
                <div class="rounded-3 login-form">
                		<h2>LOGIN</h2>
-               		<img alt="login" src="./img/login.png" width="250px;">
+               		<img alt="login" src="./img/login.jpeg" width="250px;">
 				<c:if test="${param.error eq 'login' }">
 				<div class="mb-3 row">
 					<h2 style="color:red;">로그인 하세요.</h2>
@@ -91,7 +166,13 @@
 				</div>
 				<div class="mb-3 row">
 					<div class="col-sm-12">
-						<input type="button" id="login" class="btn btn-primary" value="login" onclick="loginCheck()">
+						<input type="checkbox" class="saveID" id="saveID">
+						<label for="saveID">아이디 저장</label>
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<div class="col-sm-12">
+						<input type="button" id="login" class="btn btn-primary" value="login"><!-- onclick="loginCheck()"  -->
 						<input type="button" id="join" class="btn btn-info" value="가입하기">
 					</div>
 				</div>

@@ -6,11 +6,20 @@
 <head>
 <meta charset="UTF-8">
 <title>게시판 관리</title>
-<link rel="stylesheet"
-	href="//cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css">
 <link rel="stylesheet" href="../css/admin/adminmain.css">
 <link rel="stylesheet" href="../css/admin/multiboard.css">
 <style>
+.input_form{
+margin:0 auto;
+margin-top: 10px;
+width: 90%;
+height: 30px;
+ling-height: 30px;
+padding: 5px;
+background-color: gray;
+}
+.input-form input, .input-form button{}
 </style>
 </head>
 <body>
@@ -35,6 +44,15 @@
 							<div class="div-cell">${row.b_comment }</div>
 						</div>
 					</c:forEach>
+				</div>
+                <!--새로 입력하는 form입니다.-->
+				<div class="multiBoard">
+					<form action="./multiBoard" method="post">
+						<input type="number" name="cateNum" required="required" placeholder="게시판 번호 입력">
+						<input type="text" name="name" required="required" placeholder="게시판 이름 입력">
+						<input type="text" name="comment" required="required" placeholder="참고를 남겨주세요">
+						<button type="submit">저장</button>
+					</form>
 				</div>
 			</div>
 		</div>
